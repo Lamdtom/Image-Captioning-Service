@@ -1,0 +1,4 @@
+transformers~=4.55.4
+torch~=2.8.0+cu129
+torchvision~=0.23.0
+pillow~=10.2.0
