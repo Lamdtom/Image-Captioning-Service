@@ -1,38 +1,36 @@
-const BACKEND_URL = "http://localhost:8000"; // backend URL
-const API_URL = `${BACKEND_URL}/caption`;
-
+const API_URL = "http://localhost:8000/caption";
+const HEALTH_URL = "http://localhost:8000/health";
 const fileInput = document.getElementById("imageInput");
 const uploadBtn = document.getElementById("uploadBtn");
 const captionEl = document.getElementById("caption");
 const preview = document.getElementById("preview");
 
-// Disable upload button until backend is ready
 uploadBtn.disabled = true;
 captionEl.textContent = "Waiting for backend to start...";
 
 async function waitForBackend() {
   let ready = false;
   let seconds = 0;
+
   while (!ready) {
     try {
-      const res = await fetch(`${BACKEND_URL}/health`);
+      const res = await fetch(HEALTH_URL);
       if (res.ok) {
         ready = true;
         break;
       }
-    } catch (err) {
-      // Silently ignore network errors
+    } catch {
+      // ignore network errors
     }
-    seconds += 2;
+    seconds += 5;
     captionEl.textContent = `Backend loading... ${seconds} seconds`;
-    await new Promise(r => setTimeout(r, 5000)); // poll every 5s
+    await new Promise(r => setTimeout(r, 5000));
   }
 
-  captionEl.textContent = ""; // clear message
-  uploadBtn.disabled = false; // enable once backend is ready
+  captionEl.textContent = "";
+  uploadBtn.disabled = false;
 }
 
-// Start waiting on page load
 waitForBackend();
 
 uploadBtn.addEventListener("click", async () => {
@@ -45,11 +43,9 @@ uploadBtn.addEventListener("click", async () => {
   const formData = new FormData();
   formData.append("file", file);
 
-  // Show image preview
   preview.src = URL.createObjectURL(file);
   captionEl.textContent = "Generating caption...";
   captionEl.classList.remove("error");
-
   uploadBtn.disabled = true;
 
   try {
