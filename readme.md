@@ -1,138 +1,96 @@
-Absolutely! Here's a clean, professional README tailored for your **Image Captioning Service** project with Docker, Kubernetes, and Minikube support. You can adjust paths or URLs based on your setup.
-
----
-
 # Image Captioning Service
 
-A web service that generates captions for images using a deep learning model. This project includes a **FastAPI backend** for image processing and a **static frontend** for user interaction. The application is fully containerized with Docker and deployable on Kubernetes (tested with Minikube).
+A web service that generates captions for images using a deep learning model. Includes a **FastAPI backend** and a **static frontend**. Containerized with Docker and deployable on Kubernetes (Minikube or cloud).
+
+![Example Output](picture/example.png) 
 
 ---
 
 ## Features
 
 * Upload an image via web interface
-* Generate descriptive captions using a deep learning model
-* Dockerized backend and frontend for easy deployment
-* Kubernetes manifests for Minikube or any K8s cluster
-* Ingress configuration for unified URL routing
-* Auto-wait functionality for backend readiness to prevent 404 errors
+* Generate descriptive captions
+* Dockerized backend and frontend
+* Kubernetes manifests with ingress support
+* Backend readiness detection
 
 ---
 
-## Project Structure
+## Structure
 
 ```
 project-root/
-│
-├─ app/
-│   ├─ app.py              # Main FastAPI app
-│   └─ utils.py            # Model loading and caption generation
-│   └─ Dockerfile          # Backend Dockerfile
-|   └─ requirements.txt    # Python package requirments
-│
-├─ frontend/               # Static frontend
-│   ├─ index.html          # Main page
-│   ├─ script.js           # JS logic for file upload & caption
-│   └─ style.css           # Styles
-│   └─ Dockerfile          # Frontend Dockerfile (Nginx)
-│
-├─ kubernetes/             # Kubernetes manifests
-│   ├─ backend-deployment.yaml
-│   ├─ frontend-deployment.yaml
-│   ├─ backend-service.yaml
-│   ├─ frontend-service.yaml
-│   └─ ingress.yaml
-│
-├─ docker-compose.yaml     # Optional: run backend + frontend together
+├─ app/                # Backend
+│  ├─ app.py
+│  ├─ utils.py
+│  ├─ requirements.txt
+│  └─ Dockerfile
+├─ frontend/           # Static frontend
+│  ├─ index.html
+│  ├─ script.js
+│  ├─ style.css
+│  └─ Dockerfile
+├─ kubernetes/         # K8s manifests
+├─ docker-compose.yaml
 └─ README.md
 ```
 
 ---
 
-## Prerequisites
+## Local Docker Run
 
-* Docker
-* Docker Compose (optional)
-* Kubernetes cluster (Minikube recommended)
-* Kubectl
+```bash
+docker build -t backend ./app
+docker build -t frontend ./frontend
+docker run -p 8000:8000 backend
+docker run -p 3000:80 frontend
+```
+
+Access frontend: `http://localhost:3000`
+Backend API: `http://localhost:8000/caption`
 
 ---
 
-## Running Locally with Docker
-
-1. **Build images**:
-
-```bash
-docker build -t image-caption-backend ./backend
-docker build -t image-caption-frontend ./frontend
-```
-
-2. **Run containers**:
-
-```bash
-docker run -p 8000:8000 image-caption-backend
-docker run -p 3000:80 image-caption-frontend
-```
-
-3. **Access the application**:
-
-* Frontend: `http://localhost:3000`
-* Backend API: `http://localhost:8000/caption`
-
----
-
-## Running with Docker Compose
-
-1. Build and start services:
-
-```bash
-docker-compose up --build
-```
-
-2. Open the frontend at `http://localhost:3000`.
-
----
-
-## Running on Kubernetes (Minikube)
-
-1. **Start Minikube**:
+## Kubernetes (Minikube)
 
 ```bash
 minikube start
-```
-
-2. **Deploy backend and frontend**:
-
-```bash
-kubectl apply -f kubernetes/backend-deployment.yaml
-kubectl apply -f kubernetes/backend-service.yaml
-kubectl apply -f kubernetes/frontend-deployment.yaml
-kubectl apply -f kubernetes/frontend-service.yaml
-```
-
-3. **Deploy Ingress**:
-
-```bash
-kubectl apply -f kubernetes/ingress.yaml
-```
-
-4. **Access application**:
-
-* Use Minikube tunnel or port-forwarding if not using `/etc/hosts` entry:
-``` bash
+kubectl apply -f kubernetes/
 kubectl port-forward svc/backend 8000:8000
 minikube service frontend
 ```
 
-* Backend will be at `http://localhost:8000`
-* Frontend will open in the default browser
+---
+
+## Cloud Deployment (Optional)
+
+1. Push images to Docker Hub or cloud registry:
+
+```bash
+docker tag backend <username>/backend:latest
+docker push <username>/backend:latest
+docker tag frontend <username>/frontend:latest
+docker push <username>/frontend:latest
+```
+
+2. Update K8s manifests to use cloud images.
+3. Deploy on cloud Kubernetes (GKE, EKS, AKS) and expose via LoadBalancer or ingress.
+
+---
+
+## Frontend Upgrades
+
+* Drag-and-drop image uploads
+* Progress bar for uploads
+* Use frameworks (React/Vue) for dynamic UI
+* Configurable API endpoint via env variables
 
 ---
 
 ## Notes
 
-* The backend loads a machine learning model on startup; initial API requests may take longer.
-* CORS is enabled in the backend for development; update `allow_origins` for production.
-* Ingress can be configured to unify `/caption` and `/health` endpoints with frontend routing.
+* Backend loads ML model on startup; initial requests may be slow.
+* CORS is enabled for development. Update for production.
+* Ingress can unify frontend and backend paths.
 
 ---
