@@ -65,11 +65,11 @@ h1 {
 }
 
 .caption-box {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: #e2e8f0;
-  border-radius: 0.5rem;
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem; /* spacing between buttons */
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .caption-text {
@@ -113,21 +113,40 @@ h1 {
   animation: spin 1s linear infinite;
 }
 
-.image-container .btn.small {
-  margin-top: 0.5rem;       /* space above button */
-  width: auto;              /* do not stretch */
-  padding: 0.5rem 1rem;     /* add more padding for better click area */
-  font-size: 0.95rem;
-  background-color: #3b82f6; /* nice blue */
-  color: white;
+.image-container .btn.small,
+.image-container .btn.remove-btn {
+  padding: 0.5rem 1rem;       /* equal padding */
+  font-size: 0.95rem;         /* equal font size */
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
+  margin-top: 0.5rem;         /* same spacing above */
+  width: auto;                /* flexible width */
   transition: background 0.2s ease;
 }
 
+/* Copy button specific color */
+.image-container .btn.small {
+  background-color: #3b82f6; /* blue */
+  color: white;
+}
+
 .image-container .btn.small:hover {
-  background-color: #2563eb; /* darker blue on hover */
+  background-color: #2563eb;
+}
+
+/* Remove button specific color */
+.image-container .btn.remove-btn {
+  background-color: #ef4444; /* red */
+  color: white;
+}
+
+.image-container .btn.remove-btn:hover {
+  background-color: #b91c1c;
+}
+
+#download-btn {
+  margin-top: 0.5rem;
 }
 
 @keyframes spin {

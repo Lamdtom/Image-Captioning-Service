@@ -1,11 +1,13 @@
 const dropZone = document.getElementById("drop-zone");
 const fileInput = document.getElementById("file-input");
-const gallery = document.getElementById("gallery"); // container for multiple images
+const gallery = document.getElementById("gallery");
 const uploadBtn = document.getElementById("upload-btn");
 const loader = document.getElementById("loader");
 const errorBox = document.getElementById("error-box");
-
+const downloadBtn = document.getElementById("download-btn");
 let selectedFiles = [];
+
+downloadBtn.addEventListener("click", generateCSV);
 
 // --- Drag & Drop ---
 dropZone.addEventListener("click", () => fileInput.click());
@@ -66,9 +68,18 @@ function handleFiles(files) {
         setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
       });
 
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "Remove";
+      removeBtn.classList.add("btn", "remove-btn");
+      removeBtn.addEventListener("click", () => {
+        container.remove();
+        selectedFiles = selectedFiles.filter(f => f !== file);
+        updateDownloadButton();
+      });
+
       captionBox.appendChild(captionText);
       captionBox.appendChild(copyBtn);
-
+      captionBox.appendChild(removeBtn);   
       container.appendChild(img);
       container.appendChild(captionBox);
       gallery.appendChild(container);
@@ -77,6 +88,7 @@ function handleFiles(files) {
   }
   uploadBtn.disabled = false;
   errorBox.classList.add("hidden");
+  updateDownloadButton();
 }
 
 // --- Upload & Caption ---
@@ -112,6 +124,9 @@ uploadBtn.addEventListener("click", async () => {
       const data = await res.json();
       captionText.textContent = data.caption;
       captionBox.classList.remove("hidden");
+
+      updateDownloadButton();
+      container.dataset.hasCaption = "true";
     } catch (err) {
       showError("Failed to generate caption for one or more images. Is the backend running?");
     }
@@ -125,4 +140,34 @@ uploadBtn.addEventListener("click", async () => {
 function showError(msg) {
   errorBox.textContent = msg;
   errorBox.classList.remove("hidden");
+}
+
+
+
+function updateDownloadButton() {
+  const anyCaption = document.querySelectorAll(".caption-text").length > 0;
+  downloadBtn.disabled = !anyCaption;
+}
+
+function generateCSV() {
+  const containers = document.querySelectorAll(".image-container");
+  const rows = [["Filename", "Caption"]]; // CSV header
+
+  containers.forEach((container, index) => {
+    const file = selectedFiles[index];
+    const caption = container.querySelector(".caption-text").textContent || "";
+    rows.push([file.name, caption]);
+  });
+
+  const csvContent = rows.map(e => e.map(s => `"${s}"`).join(",")).join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "captions.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
