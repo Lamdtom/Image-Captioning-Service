@@ -1,71 +1,100 @@
-const API_URL = "http://localhost:8000/caption";
-const HEALTH_URL = "http://localhost:8000/health";
-const fileInput = document.getElementById("imageInput");
-const uploadBtn = document.getElementById("uploadBtn");
-const captionEl = document.getElementById("caption");
+const dropZone = document.getElementById("drop-zone");
+const fileInput = document.getElementById("file-input");
 const preview = document.getElementById("preview");
+const previewImg = document.getElementById("preview-img");
+const uploadBtn = document.getElementById("upload-btn");
+const loader = document.getElementById("loader");
+const captionBox = document.getElementById("caption-box");
+const captionText = document.getElementById("caption-text");
+const copyBtn = document.getElementById("copy-btn");
+const errorBox = document.getElementById("error-box");
 
-uploadBtn.disabled = true;
-captionEl.textContent = "Waiting for backend to start...";
+let selectedFile = null;
 
-async function waitForBackend() {
-  let ready = false;
-  let seconds = 0;
+// --- Drag & Drop ---
+dropZone.addEventListener("click", () => fileInput.click());
 
-  while (!ready) {
-    try {
-      const res = await fetch(HEALTH_URL);
-      if (res.ok) {
-        ready = true;
-        break;
-      }
-    } catch {
-      // ignore network errors
-    }
-    seconds += 5;
-    captionEl.textContent = `Backend loading... ${seconds} seconds`;
-    await new Promise(r => setTimeout(r, 5000));
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("dragover");
+  if (e.dataTransfer.files.length) {
+    handleFile(e.dataTransfer.files[0]);
   }
+});
 
-  captionEl.textContent = "";
-  uploadBtn.disabled = false;
-}
+fileInput.addEventListener("change", (e) => {
+  if (e.target.files.length) {
+    handleFile(e.target.files[0]);
+  }
+});
 
-waitForBackend();
-
-uploadBtn.addEventListener("click", async () => {
-  if (!fileInput.files.length) {
-    alert("Please select an image!");
+function handleFile(file) {
+  if (!file.type.startsWith("image/")) {
+    showError("Please upload a valid image file.");
     return;
   }
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImg.src = e.target.result;
+    preview.classList.remove("hidden");
+  };
+  reader.readAsDataURL(file);
+  uploadBtn.disabled = false;
+  errorBox.classList.add("hidden");
+}
 
-  const file = fileInput.files[0];
-  const formData = new FormData();
-  formData.append("file", file);
+// --- Upload & Caption ---
+uploadBtn.addEventListener("click", async () => {
+  if (!selectedFile) return;
 
-  preview.src = URL.createObjectURL(file);
-  captionEl.textContent = "Generating caption...";
-  captionEl.classList.remove("error");
+  loader.classList.remove("hidden");
+  captionBox.classList.add("hidden");
+  errorBox.classList.add("hidden");
   uploadBtn.disabled = true;
 
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+
   try {
-    const response = await fetch(API_URL, {
+    const res = await fetch("http://localhost:8000/caption", {
       method: "POST",
       body: formData,
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      captionEl.textContent = "Caption: " + data.caption;
-    } else {
-      const error = await response.json();
-      captionEl.textContent = "Error: " + (error.error || "Unknown");
-      captionEl.classList.add("error");
+    if (!res.ok) {
+      throw new Error(`Server returned ${res.status}`);
     }
+
+    const data = await res.json();
+    captionText.textContent = data.caption;
+    captionBox.classList.remove("hidden");
   } catch (err) {
-    captionEl.textContent = "Error: " + err.message;
-    captionEl.classList.add("error");
+    showError("Failed to generate caption. Is the backend running?");
   } finally {
+    loader.classList.add("hidden");
     uploadBtn.disabled = false;
   }
 });
+
+// --- Copy to Clipboard ---
+copyBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(captionText.textContent);
+  copyBtn.textContent = "Copied!";
+  setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+});
+
+// --- Error Handling ---
+function showError(msg) {
+  errorBox.textContent = msg;
+  errorBox.classList.remove("hidden");
+}

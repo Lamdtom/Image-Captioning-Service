@@ -1,60 +1,109 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f7f9fc;
-  color: #333;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 700px;
-  margin: 40px auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  width: 90%;
   text-align: center;
 }
 
 h1 {
-  color: #1f4e79;
+  margin-bottom: 0.5rem;
 }
 
-input[type="file"] {
-  margin: 20px 0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.subtitle {
+  color: #64748b;
+  margin-bottom: 1.5rem;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #1f4e79;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
+.drop-zone {
+  border: 2px dashed #3b82f6;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #f0f9ff;
   cursor: pointer;
-  margin-bottom: 20px;
+  transition: background 0.2s ease;
 }
 
-button:disabled {
-  background-color: #9bb0c3;
+.drop-zone.dragover {
+  background: #dbeafe;
+}
+
+.preview img {
+  max-width: 100%;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}
+
+.btn {
+  margin-top: 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.btn:hover {
+  background: #2563eb;
+}
+
+.btn:disabled {
+  background: #94a3b8;
   cursor: not-allowed;
 }
 
-button:hover:enabled {
-  background-color: #16395d;
+.btn.small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
 }
 
-img {
-  max-width: 100%;
-  margin-top: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.loader {
+  margin: 1.5rem auto;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
-p {
-  margin-top: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #1f4e79;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-p.error {
-  color: red;
+.caption-box {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f1f5f9;
+  border-radius: 0.5rem;
+}
+
+.error-box {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 0.5rem;
+}
+
+.hidden {
+  display: none;
 }

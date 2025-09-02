@@ -56,8 +56,8 @@ Backend API: `http://localhost:8000/caption`
 ```bash
 minikube start
 kubectl apply -f kubernetes/
-kubectl port-forward svc/backend 8000:8000
-minikube service frontend
+kubectl port-forward svc/image-caption-backend 8000:8000
+minikube service image-caption-frontend
 ```
 
 ---
@@ -67,10 +67,10 @@ minikube service frontend
 1. Push images to Docker Hub or cloud registry:
 
 ```bash
-docker tag backend <username>/backend:latest
-docker push <username>/backend:latest
-docker tag frontend <username>/frontend:latest
-docker push <username>/frontend:latest
+docker tag backend <username>/image-caption-backend:latest
+docker push <username>/image-caption-backend:latest
+docker tag frontend <username>/image-caption-frontend:latest
+docker push <username>/image-caption-frontend:latest
 ```
 
 2. Update K8s manifests to use cloud images.

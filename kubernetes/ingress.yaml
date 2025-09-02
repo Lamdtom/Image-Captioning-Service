@@ -10,20 +10,20 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: image-caption-backend
                 port:
                   number: 8000
           - path: /health/
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: image-caption-backend
                 port:
                   number: 8000
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: image-caption-frontend
                 port:
                   number: 80
