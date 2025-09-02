@@ -10,27 +10,24 @@
 <body>
   <div class="container">
     <h1>🖼️ Image Captioning</h1>
-    <p class="subtitle">Upload an image and let AI describe it.</p>
+    <p class="subtitle">Upload images and let AI describe them.</p>
 
+    <!-- Drop Zone -->
     <div id="drop-zone" class="drop-zone">
-      <p>Drag & Drop an image here<br>or click to browse</p>
-      <input type="file" id="file-input" accept="image/*" hidden />
+      <p>Drag & Drop images here<br>or click to browse</p>
+      <input type="file" id="file-input" accept="image/*" hidden multiple />
     </div>
 
-    <div id="preview" class="preview hidden">
-      <img id="preview-img" alt="Preview" />
-    </div>
+    <!-- Gallery for multiple image previews -->
+    <div id="gallery" class="gallery"></div>
 
-    <button id="upload-btn" class="btn" disabled>Generate Caption</button>
+    <!-- Upload button -->
+    <button id="upload-btn" class="btn" disabled>Generate Captions</button>
 
+    <!-- Loader -->
     <div id="loader" class="loader hidden"></div>
 
-    <div id="caption-box" class="caption-box hidden">
-      <h2>Caption</h2>
-      <p id="caption-text"></p>
-      <button id="copy-btn" class="btn small">Copy</button>
-    </div>
-
+    <!-- Error box -->
     <div id="error-box" class="error-box hidden"></div>
   </div>
 

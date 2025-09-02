@@ -14,7 +14,7 @@ body {
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  max-width: 500px;
+  max-width: 800px; /* increased for multiple images */
   width: 90%;
   text-align: center;
 }
@@ -41,10 +41,40 @@ h1 {
   background: #dbeafe;
 }
 
-.preview img {
-  max-width: 100%;
-  margin-top: 1rem;
+/* Gallery layout */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.image-container {
+  background: #f1f5f9;
   border-radius: 0.5rem;
+  padding: 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
+
+.caption-box {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #e2e8f0;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.caption-text {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
 }
 
 .btn {
@@ -83,17 +113,27 @@ h1 {
   animation: spin 1s linear infinite;
 }
 
+.image-container .btn.small {
+  margin-top: 0.5rem;       /* space above button */
+  width: auto;              /* do not stretch */
+  padding: 0.5rem 1rem;     /* add more padding for better click area */
+  font-size: 0.95rem;
+  background-color: #3b82f6; /* nice blue */
+  color: white;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.image-container .btn.small:hover {
+  background-color: #2563eb; /* darker blue on hover */
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
-}
-
-.caption-box {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: #f1f5f9;
-  border-radius: 0.5rem;
 }
 
 .error-box {
