@@ -1,18 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Image Captioning</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Captioning Service</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <h1>Image Captioning</h1>
-    <input type="file" id="imageInput" accept="image/*">
-    <br>
-    <button id="uploadBtn">Generate Caption</button>
-    <p id="caption"></p>
-    <img id="preview" src="" alt="">
+    <h1>🖼️ Image Captioning</h1>
+    <p class="subtitle">Upload images and let AI describe them.</p>
+
+    <!-- Drop Zone -->
+    <div id="drop-zone" class="drop-zone">
+      <p>Drag & Drop images here<br>or click to browse</p>
+      <input type="file" id="file-input" accept="image/*" hidden multiple />
+    </div>
+
+    <!-- Gallery for multiple image previews -->
+    <div id="gallery" class="gallery"></div>
+
+    <!-- Upload button -->
+    <button id="upload-btn" class="btn" disabled>Generate Captions</button>
+    <!-- Download All button -->
+    <button id="download-btn" class="btn" disabled>Download All Captions</button>
+
+    <!-- Loader -->
+    <div id="loader" class="loader hidden"></div>
+
+    <!-- Error box -->
+    <div id="error-box" class="error-box hidden"></div>
   </div>
 
   <script src="script.js"></script>

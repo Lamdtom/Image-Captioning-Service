@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: image-caption-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: image-caption-frontend
   template:
     metadata:
       labels:
-        app: frontend
+        app: image-caption-frontend
     spec:
       containers:
         - name: frontend
