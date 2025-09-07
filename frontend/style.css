@@ -149,6 +149,13 @@ h1 {
   margin-top: 0.5rem;
 }
 
+.model-info {
+  font-size: 0.95rem;
+  color: #334155;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

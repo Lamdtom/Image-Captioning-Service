@@ -17,7 +17,12 @@
       <p>Drag & Drop images here<br>or click to browse</p>
       <input type="file" id="file-input" accept="image/*" hidden multiple />
     </div>
-
+    <label for="model-select">Choose model:</label>
+    <select id="model-select" class="btn small">
+      <option value="blip-base">BLIP Base</option>
+      <option value="blip-large">BLIP Large</option>
+      <option value="vit-gpt2">ViT-GPT2</option>
+    </select>
     <!-- Gallery for multiple image previews -->
     <div id="gallery" class="gallery"></div>
 
