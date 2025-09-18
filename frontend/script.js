@@ -5,9 +5,19 @@ const uploadBtn = document.getElementById("upload-btn");
 const loader = document.getElementById("loader");
 const errorBox = document.getElementById("error-box");
 const downloadBtn = document.getElementById("download-btn");
+const modelSelect = document.getElementById("model-select");
 let selectedFiles = [];
 
 downloadBtn.addEventListener("click", generateCSV);
+
+modelSelect.addEventListener("change", () => {
+  const containers = document.querySelectorAll(".image-container");
+  containers.forEach(container => {
+    container.dataset.hasCaption = "false";
+    const modelInfo = container.querySelector(".model-info");
+    if (modelInfo) modelInfo.textContent = `Model: ${modelSelect.value}`;
+  });
+});
 
 // --- Drag & Drop ---
 dropZone.addEventListener("click", () => fileInput.click());
@@ -59,6 +69,10 @@ function handleFiles(files) {
       const captionText = document.createElement("p");
       captionText.classList.add("caption-text");
 
+      const modelInfo = document.createElement("p");
+      modelInfo.classList.add("model-info");
+      modelInfo.textContent = `Model: ${modelSelect.value}`;
+
       const copyBtn = document.createElement("button");
       copyBtn.textContent = "Copy";
       copyBtn.classList.add("btn", "small"); 
@@ -76,7 +90,7 @@ function handleFiles(files) {
         selectedFiles = selectedFiles.filter(f => f !== file);
         updateDownloadButton();
       });
-
+      captionBox.appendChild(modelInfo);
       captionBox.appendChild(captionText);
       captionBox.appendChild(copyBtn);
       captionBox.appendChild(removeBtn);   
@@ -109,10 +123,11 @@ uploadBtn.addEventListener("click", async () => {
 
     const captionBox = container.querySelector(".caption-box");
     const captionText = container.querySelector(".caption-text");
+    const modelInfo = container.querySelector(".model-info")
 
     const formData = new FormData();
     formData.append("file", file);
-
+    formData.append("model", modelSelect.value); 
     try {
       const res = await fetch("http://localhost:8000/caption", {
         method: "POST",
